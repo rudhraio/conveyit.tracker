@@ -13,10 +13,7 @@ export function connectDB() {
         try {
             const mongoURI = env.database.url; // Replace with your MongoDB URI
             mongooseClient.set('strictQuery', false); // Optional: Configure Mongoose behavior
-            await mongooseClient.connect(mongoURI, {
-                useNewUrlParser: true,
-                useUnifiedTopology: true,
-            });
+            await mongooseClient.connect(mongoURI);
             console.log('MongoDB connected successfully');
             resolve();
         } catch (error) {
