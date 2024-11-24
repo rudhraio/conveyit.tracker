@@ -1,6 +1,7 @@
 import express from "express";
 import trackRouter from "./apiv1/track.js";
 import submitFormRouter from "./apiv1/submit-form.js";
+import analyticsRouter from "./apiv1/analytics.js";
 
 
 

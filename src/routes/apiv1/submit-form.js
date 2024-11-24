@@ -21,6 +21,7 @@ submitFormRouter.post('/', async (req, res) => {
     const requiredFields = ['message']; // 'message' is the only required field
     const missingFields = requiredFields.filter((field) => !formData[field]);
 
+    
     if (missingFields.length > 0) {
         return badResponse(res, `Missing required field: ${missingFields.join(', ')}`)
     }

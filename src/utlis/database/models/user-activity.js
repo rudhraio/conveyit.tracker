@@ -21,6 +21,10 @@ const userActivitySchema = new mongoose.Schema({
         type: Object,
         required: false,
     },
+    req: {
+        type: Object,
+        required: false,
+    },
     createdAt: { type: Date, default: Date.now },
 
 });

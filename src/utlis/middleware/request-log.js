@@ -1,12 +1,26 @@
+import { json, query } from "express";
 import { UserActivity } from "../database/models/user-activity.js";
 import logger from "../helpers/logger.js";
 
 async function requestLog(req, res, next) {
-    const ipAddress = req.ip || req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-    const userAgent = req.headers['user-agent'];
-    const visitedUrl = req.query.url || 'Unknown URL';
+    const ipAddress = req.headers['x-forwarded-for'] || req.ip || req.connection.remoteAddress;
+    const userAgent = req.headers['sec-ch-ua-platform'] || req.headers['user-agent'];
+    const visitedUrl = req?.headers?.referer + req?.query?.u || 'Unknown URL';
 
-    logger(`[Request] \n[IP]: ${req.ip} \n[method]: ${req.method} \n[headers]: ${JSON.stringify(req.headers)} \n[data]: ${JSON.stringify(req?.body)} \n[url]: ${req.url} \n`);
+    logger(`[Request] \n[IP]: ${req.ip} 
+        \n[method]: ${req.method} 
+        \n[headers]: ${JSON.stringify(req.headers)} 
+        \n[data]: ${JSON.stringify(req?.body)} 
+        \n[url]: ${req.url} 
+        \n`);
+    console.log({
+                method: req.method,
+                url: req.url,
+                query: req.query,
+                params: req.params,
+                body: req.body,
+                visitedUrl
+            })
     try {
         await UserActivity.create({
             ipAddress: ipAddress,
@@ -15,12 +29,13 @@ async function requestLog(req, res, next) {
             headers: req.headers,
             additionalData: {
                 method: req.method,
+                url: req.url,
+                query: req.query,
+                params: req.params,
                 body: req.body,
-                url: req.url
-            }
+            },
         });
     } catch (error) {
-        console.log("Error", error);
         logger(`Error in user activity`)
     }
     return next();
