@@ -39,7 +39,7 @@
                         <tr class="border-b">
                             <td class="px-4 py-2 text-sm text-gray-700"><%= i + 1 %></td>
                             <td class="px-4 py-2 text-sm text-gray-700">
-                                <%= item.headers?.["true-client-ip"] || 'N/A' %>
+                                <%= item.ipAddress || 'N/A' %>
                                 <button onclick="toggleAccordion(<%= i %>, 'table')" class="ml-2 text-blue-500 text-xs">Show Details</button>
                                 <div id="table-accordion-content-<%= i %>" class="hidden mt-2 bg-gray-100 p-2 rounded-lg max-w-full overflow-x-auto">
                                     <pre class="text-sm text-gray-600"><%= JSON.stringify(item.headers, null, 2) %></pre>
@@ -47,7 +47,7 @@
                             </td>
                             <td class="px-4 py-2 text-sm text-gray-700"><%= item.headers?.["sec-ch-ua-platform"] || 'N/A' %></td>
                             <td class="px-4 py-2 text-sm text-gray-700"><%= item.headers?.["cf-ipcountry"] || 'N/A' %></td>
-                            <td class="px-4 py-2 text-sm text-gray-700"><%= item.headers?.referer || 'N/A' %></td>
+                            <td class="px-4 py-2 text-sm text-gray-700"><%= item.visitedUrl || 'N/A' %></td>
                             <td class="px-4 py-2 text-sm text-gray-700"><%= new Date(item.createdAt).toLocaleString() %></td>
                             <td class="px-4 py-2 text-sm text-gray-700">
                                 <pre><%= JSON.stringify(item.additionalData, null, 2) %></pre>
