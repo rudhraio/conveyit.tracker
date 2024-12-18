@@ -16,15 +16,13 @@
 </head>
 
 <body class="bg-gray-100">
-
     <div class="container mx-auto p-8">
         <div class="flex flex-row items-center mb-6 w-full justify-between">
-
-            <h1 class="text-3xl font-bold ">User Analytics</h1>
-            <h3 class="text-lg font-medium">Count: <%= data.length %></h3>
+            <h1 class="text-3xl font-bold">User Analytics</h1>
+            <h3 class="text-lg font-medium">Total Records: <%= totalRecords %></h3>
         </div>
 
-        <!-- Desktop Table with Accordion -->
+        <!-- Desktop Table -->
         <div class="hidden md:block overflow-x-auto bg-white shadow-md rounded-lg">
             <table class="min-w-full table-auto">
                 <thead>
@@ -39,80 +37,44 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <% data.forEach((item, i)=> { %>
+                    <% data.forEach((item, i) => { %>
                         <tr class="border-b">
-                            <td class="px-4 py-2 text-sm text-gray-700">
-                                <%= i + 1 %>
-                            </td>
+                            <td class="px-4 py-2 text-sm text-gray-700"><%= (currentPage - 1) * limit + i + 1 %></td>
                             <td class="px-4 py-2 text-sm text-gray-700">
                                 <%= item.headers?.["true-client-ip"] || 'N/A' %>
-                                    <button onclick="toggleAccordion(<%= i %>, 'table')"
-                                        class="ml-2 text-blue-500 text-xs">Show Details</button>
-                                    <div id="table-accordion-content-<%= i %>"
-                                        class="hidden mt-2 bg-gray-100 p-2 rounded-lg max-w-full overflow-x-auto">
-                                        <pre
-                                            class="text-sm text-gray-600"><%= JSON.stringify(item.headers, null, 2) %></pre>
-                                    </div>
+                                <button onclick="toggleAccordion(<%= i %>, 'table')" class="ml-2 text-blue-500 text-xs">Show Details</button>
+                                <div id="table-accordion-content-<%= i %>" class="hidden mt-2 bg-gray-100 p-2 rounded-lg max-w-full overflow-x-auto">
+                                    <pre class="text-sm text-gray-600"><%= JSON.stringify(item.headers, null, 2) %></pre>
+                                </div>
                             </td>
-                            <td class="px-4 py-2 text-sm text-gray-700">
-                                <%= item.headers?.["sec-ch-ua-platform"] || 'N/A' %>
-                            </td>
-                            <td class="px-4 py-2 text-sm text-gray-700">
-                                <%= item.headers?.["cf-ipcountry"] || 'N/A' %>
-                            </td>
-                            <td class="px-4 py-2 text-sm text-gray-700">
-                                <%= item.visitedUrl || 'N/A' %>
-                            </td>
-                            <td class="px-4 py-2 text-sm text-gray-700">
-                                <%= new Date(item.createdAt).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }); %>
-                            </td>
-                            <td class="px-4 py-2 text-sm text-gray-700">
-                                <pre><%= JSON.stringify(item.additionalData, null, 2) %></pre>
-                            </td>
+                            <td class="px-4 py-2 text-sm text-gray-700"><%= item.headers?.["sec-ch-ua-platform"] || 'N/A' %></td>
+                            <td class="px-4 py-2 text-sm text-gray-700"><%= item.headers?.["cf-ipcountry"] || 'N/A' %></td>
+                            <td class="px-4 py-2 text-sm text-gray-700"><%= item.visitedUrl || 'N/A' %></td>
+                            <td class="px-4 py-2 text-sm text-gray-700"><%= new Date(item.createdAt).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }); %></td>
+                            <td class="px-4 py-2 text-sm text-gray-700"><pre><%= JSON.stringify(item.additionalData, null, 2) %></pre></td>
                         </tr>
-                        <% }) %>
+                    <% }); %>
                 </tbody>
             </table>
         </div>
 
-        <!-- Mobile Cards with Accordion -->
-        <div class="md:hidden space-y-4">
-            <% data.forEach((item, i)=> { %>
-                <div class="bg-white shadow-md rounded-lg p-4">
-                    <div class="text-gray-700">
-                        <p><strong>S. No:</strong>
-                            <%= i + 1 %>
-                        </p>
-                        <p><strong>IP Address:</strong>
-                            <%= item.headers?.["true-client-ip"] || 'N/A' %>
-                        </p>
-                        <p><strong>Device:</strong>
-                            <%= item.headers?.["sec-ch-ua-platform"] || 'N/A' %>
-                        </p>
-                        <p><strong>Country:</strong>
-                            <%= item.headers?.["cf-ipcountry"] || 'N/A' %>
-                        </p>
-                        <p><strong>Visited URL:</strong>
-                            <%= item.visitedUrl|| 'N/A' %>
-                        </p>
-                        <p><strong>Date:</strong>
-                            <%= new Date(item.createdAt).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }); %>
-                        </p>
-                        <p><strong>Additional Info:</strong></p>
-                        <pre class="text-sm text-gray-600"><%= JSON.stringify(item.additionalData, null, 2) %></pre>
-                    </div>
-                    <button class="mt-4 text-blue-500" onclick="toggleAccordion(<%= i %>, 'mobile')">
-                        Show Headers
-                    </button>
-                    <div id="mobile-accordion-content-<%= i %>"
-                        class="hidden mt-2 bg-gray-100 p-2 rounded-lg max-w-full overflow-x-auto">
-                        <pre class="text-sm text-gray-600"><%= JSON.stringify(item.headers, null, 2) %></pre>
-                    </div>
-                </div>
-                <% }) %>
+        <!-- Pagination Controls -->
+        <div class="flex justify-between items-center mt-6">
+            <button
+                class="px-4 py-2 bg-blue-500 text-white rounded-lg disabled:opacity-50"
+                onclick="window.location.href='?page=<%= currentPage - 1 %>&limit=<%= limit %>'"
+                <%= currentPage === 1 ? 'disabled' : '' %>>
+                Previous
+            </button>
+            <p>Page <%= currentPage %> of <%= totalPages %></p>
+            <button
+                class="px-4 py-2 bg-blue-500 text-white rounded-lg disabled:opacity-50"
+                onclick="window.location.href='?page=<%= currentPage + 1 %>&limit=<%= limit %>'"
+                <%= currentPage === totalPages ? 'disabled' : '' %>>
+                Next
+            </button>
         </div>
     </div>
-
 </body>
 
 </html>

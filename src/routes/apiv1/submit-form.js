@@ -25,7 +25,7 @@ submitFormRouter.post('/', async (req, res) => {
     if (missingFields.length > 0) {
         return badResponse(res, `Missing required field: ${missingFields.join(', ')}`)
     }
-    console.log({ ...formData });
+
     try {
         // Save the form data along with IP address and URL to the database
         await ContactForm.create({

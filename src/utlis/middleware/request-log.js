@@ -13,14 +13,6 @@ async function requestLog(req, res, next) {
         \n[data]: ${JSON.stringify(req?.body)} 
         \n[url]: ${req.url} 
         \n`);
-    console.log({
-                method: req.method,
-                url: req.url,
-                query: req.query,
-                params: req.params,
-                body: req.body,
-                visitedUrl
-            })
     try {
         await UserActivity.create({
             ipAddress: ipAddress,
