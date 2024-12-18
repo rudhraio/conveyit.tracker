@@ -58,6 +58,43 @@
             </table>
         </div>
 
+        <!-- Mobile Cards with Accordion -->
+        <div class="md:hidden space-y-4">
+            <% data.forEach((item, i)=> { %>
+                <div class="bg-white shadow-md rounded-lg p-4">
+                    <div class="text-gray-700">
+                        <p><strong>S. No:</strong>
+                            <%= (currentPage - 1) * limit + i + 1 %>
+                        </p>
+                        <p><strong>IP Address:</strong>
+                            <%= item.headers?.["true-client-ip"] || 'N/A' %>
+                        </p>
+                        <p><strong>Device:</strong>
+                            <%= item.headers?.["sec-ch-ua-platform"] || 'N/A' %>
+                        </p>
+                        <p><strong>Country:</strong>
+                            <%= item.headers?.["cf-ipcountry"] || 'N/A' %>
+                        </p>
+                        <p><strong>Visited URL:</strong>
+                            <%= item.visitedUrl|| 'N/A' %>
+                        </p>
+                        <p><strong>Date:</strong>
+                            <%= new Date(item.createdAt).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }); %>
+                        </p>
+                        <p><strong>Additional Info:</strong></p>
+                        <pre class="text-sm text-gray-600"><%= JSON.stringify(item.additionalData, null, 2) %></pre>
+                    </div>
+                    <button class="mt-4 text-blue-500" onclick="toggleAccordion(<%= i %>, 'mobile')">
+                        Show Headers
+                    </button>
+                    <div id="mobile-accordion-content-<%= i %>"
+                        class="hidden mt-2 bg-gray-100 p-2 rounded-lg max-w-full overflow-x-auto">
+                        <pre class="text-sm text-gray-600"><%= JSON.stringify(item.headers, null, 2) %></pre>
+                    </div>
+                </div>
+                <% }) %>
+        </div>
+
         <!-- Pagination Controls -->
         <div class="flex justify-between items-center mt-6">
             <button
